@@ -10,6 +10,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>node-registry</module>
+        <module>data-service</module>
+        <module>meta-service</module>
         <module>proto</module>
     </modules>
 
@@ -44,6 +46,16 @@
             <dependency>
                 <groupId>com.arnold.msg</groupId>
                 <artifactId>message-queue-proto</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.arnold.msg</groupId>
+                <artifactId>meta-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.arnold.msg</groupId>
+                <artifactId>data-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
