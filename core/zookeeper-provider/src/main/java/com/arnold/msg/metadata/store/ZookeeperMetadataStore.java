@@ -3,9 +3,7 @@ package com.arnold.msg.metadata.store;
 import com.arnold.msg.JsonUtils;
 import com.arnold.msg.ZookeeperClientHolder;
 import com.arnold.msg.exceptions.ZookeeperMetadataStoreException;
-import com.arnold.msg.metadata.model.ClusterMetadata;
 import com.arnold.msg.metadata.model.Metadata;
-import com.arnold.msg.metadata.model.QueueMetadata;
 import com.arnold.msg.metadata.model.ResourceType;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
@@ -20,14 +18,7 @@ public class ZookeeperMetadataStore<T extends Metadata> implements MetadataStore
     private final ResourceType type;
     private final Class<T> clazz;
 
-    public static void initialize() {
-        MetadataStoreRegistry.registerMetadataStore(ResourceType.QUEUE,
-                new ZookeeperMetadataStore<>(ResourceType.QUEUE, QueueMetadata.class));
-        MetadataStoreRegistry.registerMetadataStore(ResourceType.CLUSTER,
-                new ZookeeperMetadataStore<>(ResourceType.CLUSTER, ClusterMetadata.class));
-    }
-
-    private ZookeeperMetadataStore(ResourceType type, Class<T> clazz) {
+    public ZookeeperMetadataStore(ResourceType type, Class<T> clazz) {
         this.client = ZookeeperClientHolder.getClient();
         this.type = type;
         this.clazz = clazz;

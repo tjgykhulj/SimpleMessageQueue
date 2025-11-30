@@ -9,18 +9,17 @@ import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-// IT test
 @Slf4j
-public class ClientTest {
+public class ClientIntegrationTest {
 
-    private ManagedChannel channel;
-    private MetaServiceGrpc.MetaServiceBlockingStub blockingStub;
+    private final MetaServiceGrpc.MetaServiceBlockingStub blockingStub;
 
     private static final String cluster = "test-cluster";
     private static final String queue = "test-queue";
 
-    public ClientTest() {
-        this.channel = ManagedChannelBuilder.forAddress("127.0.0.1", 9000)
+    public ClientIntegrationTest() {
+        ManagedChannel channel = ManagedChannelBuilder
+                .forAddress("127.0.0.1", 9000)
                 .usePlaintext()
                 .build();
         this.blockingStub = MetaServiceGrpc.newBlockingStub(channel);

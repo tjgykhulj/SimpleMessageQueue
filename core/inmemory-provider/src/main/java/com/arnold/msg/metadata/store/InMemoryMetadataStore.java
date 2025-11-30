@@ -10,13 +10,7 @@ public class InMemoryMetadataStore implements MetadataStore<Metadata> {
 
     private final Map<String, Metadata> metadataMap;
 
-    public synchronized static void initialize() {
-        for (ResourceType type : ResourceType.values()) {
-            MetadataStoreRegistry.registerMetadataStore(type, new InMemoryMetadataStore());
-        }
-    }
-
-    private InMemoryMetadataStore() {
+    public InMemoryMetadataStore() {
         this.metadataMap = new ConcurrentHashMap<>();
     }
 

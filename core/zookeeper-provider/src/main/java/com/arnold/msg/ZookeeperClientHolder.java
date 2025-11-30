@@ -17,7 +17,7 @@ public final class ZookeeperClientHolder {
 
     public static void initialize() {
         if (initialized) {
-            throw new IllegalStateException("ZK client already initialized");
+            return;
         }
 
         synchronized (lock) {

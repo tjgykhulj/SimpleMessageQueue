@@ -1,13 +1,12 @@
 package com.arnold.msg.metadata;
 
+import com.arnold.msg.InMemoryBootstrap;
 import com.arnold.msg.metadata.model.ClusterKind;
 import com.arnold.msg.metadata.model.ClusterMetadata;
 import com.arnold.msg.metadata.model.QueueMetadata;
 import com.arnold.msg.metadata.model.ResourceType;
 import com.arnold.msg.metadata.opeartor.BackendOperator;
 import com.arnold.msg.metadata.opeartor.BackendOperatorRegistry;
-import com.arnold.msg.metadata.operator.InMemoryBackendOperator;
-import com.arnold.msg.metadata.store.InMemoryMetadataStore;
 import com.arnold.msg.metadata.store.MetadataStore;
 import com.arnold.msg.metadata.store.MetadataStoreRegistry;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +16,7 @@ public class InMemoryMetadataTest {
 
     @Test
     public void testMetadata() {
-        InMemoryMetadataStore.initialize();
+        InMemoryBootstrap.initMetadataStore();
         MetadataStore<ClusterMetadata> clusterStore = MetadataStoreRegistry.getMetadataStore(ResourceType.CLUSTER);
         ClusterMetadata cluster = new ClusterMetadata();
         cluster.setId("test");
@@ -36,7 +35,7 @@ public class InMemoryMetadataTest {
 
     @Test
     public void testOperator() {
-        InMemoryBackendOperator.initialize();
+        InMemoryBootstrap.initBackendOperator();
         BackendOperator operator = BackendOperatorRegistry.getOperator(ClusterKind.IN_MEMORY);
 
         QueueMetadata queue = new QueueMetadata();

@@ -1,5 +1,7 @@
 package com.arnold.msg.server;
 
+import com.arnold.msg.InMemoryBootstrap;
+import com.arnold.msg.ZookeeperBootstrap;
 import com.arnold.msg.ZookeeperClientHolder;
 import com.arnold.msg.data.InMemoryAtMostOnceMessageConsumer;
 import com.arnold.msg.data.InMemoryMessageProducer;
@@ -34,10 +36,9 @@ public class InMemoryZKServer {
 
     private static void initialize() {
         // init zk as meta store
-        ZookeeperClientHolder.initialize();
-        ZookeeperMetadataStore.initialize();
-        // init inmemory as backend data storage
-        InMemoryBackendOperator.initialize();
+        ZookeeperBootstrap.initAll();
+        // init in-memory as backend data storage
+        InMemoryBootstrap.initBackendOperator();
 
 
         MetadataStore<ClusterMetadata> clusterMetadataStore = MetadataStoreRegistry.getMetadataStore(ResourceType.CLUSTER);
