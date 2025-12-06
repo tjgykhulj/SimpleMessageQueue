@@ -26,8 +26,12 @@ public class KafkaMessageClientPool implements MessageClientPool {
 
     @Override
     public MessageConsumer getConsumer(String consumer) {
-        // TODO
-        return consumerPool.computeIfAbsent(consumer, c -> null);
+        return consumerPool.computeIfAbsent(consumer, c -> {
+            ConsumerMetadata metadata = consumerStore.findByID(c);
+            ClusterMetadata cluster = clusterStore.findByID(metadata.getCluster());
+            KafkaClusterMetadata kafkaCluster = new KafkaClusterMetadata(cluster);
+            return new KafkaMessageAtMostOnceConsumer(kafkaCluster.getConfig(), metadata);
+        });
     }
 
     @Override

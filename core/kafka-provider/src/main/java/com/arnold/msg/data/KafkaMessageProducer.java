@@ -5,7 +5,6 @@ import com.arnold.msg.exceptions.MessageSendException;
 import com.arnold.msg.metadata.model.KafkaClusterConfig;
 import com.arnold.msg.metadata.model.ProducerMetadata;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.*;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
 
@@ -51,7 +50,7 @@ public class KafkaMessageProducer implements MessageProducer {
         long waitUntil = System.currentTimeMillis() + timeoutMs;
         List<Future<RecordMetadata>> futures = new ArrayList<>();
         for (Message msg: messageList) {
-            ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(msg.getQueue(), msg.getData());
+            ProducerRecord<byte[], byte[]> record = new ProducerRecord<>(msg.getQueue(), msg.getPayload());
             futures.add(client.send(record));
         }
         for (Future<RecordMetadata> future: futures) {

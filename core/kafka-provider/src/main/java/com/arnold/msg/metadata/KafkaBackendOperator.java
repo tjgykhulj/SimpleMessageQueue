@@ -6,9 +6,7 @@ import com.arnold.msg.metadata.model.KafkaClusterMetadata;
 import com.arnold.msg.metadata.model.QueueMetadata;
 import com.arnold.msg.metadata.opeartor.BackendOperator;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.DescribeClusterResult;
-import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.admin.*;
 
 import java.util.Collections;
 import java.util.Optional;
@@ -19,7 +17,7 @@ import java.util.function.Consumer;
 @Slf4j
 public class KafkaBackendOperator implements BackendOperator {
     private static final Integer DEFAULT_PARTITION = 3;
-    private static final Short DEFAULT_REPLICA = 3;
+    private static final Short DEFAULT_REPLICA = 1;
 
     @Override
     public void createQueue(ClusterMetadata cluster, QueueMetadata queue) {
@@ -27,7 +25,9 @@ public class KafkaBackendOperator implements BackendOperator {
             try {
                 NewTopic topic = new NewTopic(
                         queue.getId(), Optional.of(DEFAULT_PARTITION), Optional.of(DEFAULT_REPLICA));
-                adminClient.createTopics(Collections.singleton(topic));
+                CreateTopicsResult result = adminClient.createTopics(Collections.singleton(topic));
+                result.all().get();
+                log.debug("create topic finish");
             } catch (Exception e) {
                 throw new KafkaAdminOperationException("Failed to delete kafka topic", e);
             }
@@ -38,7 +38,8 @@ public class KafkaBackendOperator implements BackendOperator {
     public void deleteQueue(ClusterMetadata metadata, QueueMetadata queue) {
         operateInKafka(metadata, adminClient -> {
             try {
-                adminClient.deleteTopics(Collections.singleton(queue.getId()));
+                DeleteTopicsResult result = adminClient.deleteTopics(Collections.singleton(queue.getId()));
+                result.all().get();
             } catch (Exception e) {
                 throw new KafkaAdminOperationException("Failed to delete kafka topic", e);
             }

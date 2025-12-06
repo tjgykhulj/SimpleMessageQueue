@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Message {
-    private byte[] data;
+    private byte[] payload;
     private String queue;
+    private long messageId;
 }

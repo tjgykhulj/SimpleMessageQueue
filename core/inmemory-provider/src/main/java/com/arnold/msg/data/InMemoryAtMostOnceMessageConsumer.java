@@ -13,22 +13,27 @@ public class InMemoryAtMostOnceMessageConsumer implements MessageConsumer {
 
     private final static int BATCH_MESSAGE_COUNT = 10;
     private final String consumer;
+    private final String queue;
 
 
-    public InMemoryAtMostOnceMessageConsumer(String consumer) {
+    public InMemoryAtMostOnceMessageConsumer(String consumer, String queue) {
         this.consumer = consumer;
+        this.queue = queue;
     }
 
     @Override
-    public synchronized MessageBatch poll(String queueName) {
-        List<Message> queue = DATA.get(queueName);
+    public synchronized MessageBatch poll() {
+        List<Message> queueList = DATA.get(queue);
+        if (queueList == null) {
+            return new MessageBatch();
+        }
         List<Message> messages = new ArrayList<>();
         for (int i=0; i<BATCH_MESSAGE_COUNT; i++) {
             Integer off = OFFSETS.getOrDefault(consumer, 0);
-            if (queue.size() <= off) {
+            if (queueList.size() <= off) {
                 break;
             }
-            messages.add(queue.get(off));
+            messages.add(queueList.get(off));
             OFFSETS.put(consumer, off + 1);
         }
         MessageBatch batch = new MessageBatch();

@@ -2,14 +2,8 @@ package com.arnold.msg.server;
 
 import com.arnold.msg.JsonUtils;
 import com.arnold.msg.metadata.model.KafkaClusterConfig;
-import com.arnold.msg.proto.common.ClusterInfo;
-import com.arnold.msg.proto.common.ClusterKindEnum;
-import com.arnold.msg.proto.common.ProducerInfo;
-import com.arnold.msg.proto.common.QueueInfo;
-import com.arnold.msg.proto.data.DataServiceGrpc;
-import com.arnold.msg.proto.data.MessageProto;
-import com.arnold.msg.proto.data.ProduceRequest;
-import com.arnold.msg.proto.data.ProduceResponse;
+import com.arnold.msg.proto.common.*;
+import com.arnold.msg.proto.data.*;
 import com.arnold.msg.proto.meta.*;
 import com.google.protobuf.ByteString;
 import io.grpc.ManagedChannel;
@@ -17,6 +11,8 @@ import io.grpc.ManagedChannelBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -97,21 +93,47 @@ public class ClientDataIntegrationTest {
                         .build())
                 .build();
         ProducerInfo response = metaBlockingStub.createProducer(req);
-        log.info("Create Response: {}", response);
+        log.info("Create Produce Response: {}", response);
+    }
+
+    @Test
+    public void testCreateConsumer() {
+        CreateConsumerRequest req = CreateConsumerRequest.newBuilder()
+                .setConsumer(ConsumerInfo.newBuilder()
+                        .setName(consumer)
+                        .setQueue(queue)
+                        .setCluster(cluster)
+                        .build())
+                .build();
+        ConsumerInfo response = metaBlockingStub.createConsumer(req);
+        log.info("Create Consume Response: {}", response);
     }
 
     // after create cluster \ create queue
     @Test
     public void testProduce() {
-        MessageProto msg = MessageProto.newBuilder()
-                .setQueue(queue)
-                .setPayload(ByteString.copyFrom("test".getBytes()))
-                .build();
+        List<MessageProto> messages = new ArrayList<>();
+        for (int i=0; i<100; i++) {
+            MessageProto msg = MessageProto.newBuilder()
+                    .setQueue(queue)
+                    .setPayload(ByteString.copyFrom("test".getBytes()))
+                    .build();
+            messages.add(msg);
+        }
         ProduceRequest req = ProduceRequest.newBuilder()
                 .setProducer(producer)
-                .addMessages(msg)
+                .addAllMessages(messages)
                 .build();
         ProduceResponse resp = dataBlockingStub.produce(req);
         log.info("Produce Response: {}", resp);
+    }
+
+    @Test
+    public void testConsume() {
+        ConsumeRequest req = ConsumeRequest.newBuilder()
+                .setConsumer(consumer)
+                .build();
+        ConsumeResponse resp = dataBlockingStub.consume(req);
+        log.info("Consume Response: {}", resp);
     }
 }
