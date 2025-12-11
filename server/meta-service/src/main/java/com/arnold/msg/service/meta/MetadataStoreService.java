@@ -165,6 +165,7 @@ public class MetadataStoreService {
         metadata.setId(info.getName());
         metadata.setQueue(info.getQueue());
         metadata.setCluster(info.getCluster());
+        metadata.setSemantic(DeliverySemantic.valueOf(info.getSemantic().name()));
         return metadata;
     }
 
@@ -174,7 +175,9 @@ public class MetadataStoreService {
         }
         return ConsumerInfo.newBuilder()
                 .setName(metadata.getId())
+                .setQueue(metadata.getQueue())
                 .setCluster(metadata.getCluster())
+                .setSemantic(DeliverySemanticEnum.valueOf(metadata.getSemantic().name()))
                 .build();
     }
 

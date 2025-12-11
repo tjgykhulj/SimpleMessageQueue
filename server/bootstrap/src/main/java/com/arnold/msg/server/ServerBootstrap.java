@@ -3,11 +3,9 @@ package com.arnold.msg.server;
 import com.arnold.msg.InMemoryProviderBootstrap;
 import com.arnold.msg.KafkaProviderBootstrap;
 import com.arnold.msg.ZookeeperProviderBootstrap;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 
-@Slf4j
 public class ServerBootstrap {
 
     public static void main(String[] args) throws IOException, InterruptedException {

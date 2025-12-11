@@ -30,7 +30,11 @@ public class KafkaMessageClientPool implements MessageClientPool {
             ConsumerMetadata metadata = consumerStore.findByID(c);
             ClusterMetadata cluster = clusterStore.findByID(metadata.getCluster());
             KafkaClusterMetadata kafkaCluster = new KafkaClusterMetadata(cluster);
-            return new KafkaMessageAtMostOnceConsumer(kafkaCluster.getConfig(), metadata);
+            if (metadata.getSemantic() == DeliverySemantic.AT_MOST_ONCE) {
+                return new KafkaMessageAtMostOnceConsumer(kafkaCluster.getConfig(), metadata);
+            } else {
+                return new KafkaMessageAtLeastOnceConsumer(kafkaCluster.getConfig(), metadata);
+            }
         });
     }
 

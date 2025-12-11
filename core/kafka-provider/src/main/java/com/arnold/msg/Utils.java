@@ -16,7 +16,14 @@ public class Utils {
         if (offset < 0 || offset > MAX_OFFSET) {
             throw new IllegalArgumentException("Offset: " + offset + " is out of range");
         }
-        return ((long) partition << OFFSET_BITS) |
-                (offset & ((1L << OFFSET_BITS) - 1));
+        return ((long) partition << OFFSET_BITS) | (offset & MAX_OFFSET);
+    }
+
+    public static long getOffset(long messageId) {
+        return messageId & MAX_OFFSET;
+    }
+
+    public static int getPartition(long messageId) {
+        return (int) ((messageId >> OFFSET_BITS) & MAX_PARTITION);
     }
 }

@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 
 @Slf4j
 public class KafkaBackendOperator implements BackendOperator {
+    // TODO should be configured
     private static final Integer DEFAULT_PARTITION = 3;
     private static final Short DEFAULT_REPLICA = 1;
 

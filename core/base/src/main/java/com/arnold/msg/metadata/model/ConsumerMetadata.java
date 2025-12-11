@@ -10,6 +10,7 @@ public class ConsumerMetadata implements Metadata {
     private String id;
     private String queue;
     private String cluster;
+    private DeliverySemantic semantic = DeliverySemantic.AT_LEAST_ONCE;
 
     @Override
     public ResourceType getResourceType() {

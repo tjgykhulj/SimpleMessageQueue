@@ -24,7 +24,7 @@ public class ClientDataIntegrationTest {
     private final String cluster = "local-cluster";
     private final String queue = "test-queue";
     private final String producer = "test-p";
-    private final String consumer = "test-c";
+    private final String consumer = "test-c4";
 
     public ClientDataIntegrationTest() {
         ManagedChannel channel = ManagedChannelBuilder
@@ -113,7 +113,7 @@ public class ClientDataIntegrationTest {
     @Test
     public void testProduce() {
         List<MessageProto> messages = new ArrayList<>();
-        for (int i=0; i<100; i++) {
+        for (int i=0; i<500; i++) {
             MessageProto msg = MessageProto.newBuilder()
                     .setQueue(queue)
                     .setPayload(ByteString.copyFrom("test".getBytes()))
